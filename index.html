@@ -31,27 +31,19 @@
 
         html { scroll-behavior: smooth; }
         
-        /* --- ESTILIZAÇÃO MINIMALISTA DAS BARRAS DE ROLAGEM --- */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; margin: 0; 
             transition: background-color 0.3s, color 0.3s; 
-            overflow-x: hidden; /* Remove a barra horizontal de baixo do site */
+            overflow-x: hidden;
         }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 0px;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 0px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0,0,0,0.15); 
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         [data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
         [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
         * { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.15) transparent; }
-        /* --------------------------------------------------- */
 
         .container-login { max-width: 500px; margin: 10vh auto; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color 0.3s; }
         .container-setup { max-width: 800px; margin: 5vh auto; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color 0.3s; }
@@ -142,27 +134,8 @@
             @page { margin: 2cm; }
         }
 
-        /* --- CSS DAS NOTIFICAÇÕES TOAST --- */
-        #toast-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .toast {
-            min-width: 250px;
-            padding: 15px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: bold;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.3s ease-in-out;
-        }
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { min-width: 250px; padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0; transform: translateX(100%); transition: all 0.3s ease-in-out; }
         .toast.show { opacity: 1; transform: translateX(0); }
         .toast-success { background-color: #28a745; }
         .toast-danger { background-color: #dc3545; }
@@ -510,7 +483,7 @@
                     
                     <h4>Escolaridade, Lazer e Temperamento</h4>
                     <div class="grid-2">
-                        <div class="form-group"><label>Tipo de instituição escolar:</label><input type="text" id="hab-esc-tipo" placeholder="Creche, Pública, Particular..."></div>
+                        <div class="form-group"><label>Tipo de institution escolar:</label><input type="text" id="hab-esc-tipo" placeholder="Creche, Pública, Particular..."></div>
                         <div class="form-group"><label>Horários que frequenta:</label><input type="text" id="hab-esc-hora" placeholder="Integral, Manhã, Tarde..."></div>
                         <div class="form-group"><label>Rendimento/Desempenho Escolar:</label><input type="text" id="hab-esc-rend" placeholder="Bom, dificuldades específicas?"></div>
                         <div class="form-group"><label>Relacionamento escolar:</label><input type="text" id="hab-esc-rel" placeholder="Como interage com colegas e professores?"></div>
@@ -770,7 +743,7 @@
         
         <div style="display: flex; gap: 15px; margin-bottom: 20px;">
             <button class="btn btn-secondary" style="width: auto; margin-top: 0;" onclick="voltarAoDashboard()">← Voltar</button>
-            <input type="text" id="search-paciente" placeholder="Buscar paciente pelo nome..." onkeyup="filtrarProntuarios()" style="flex: 1; margin: 0; font-size: 1.1em; border-radius: 8px;">
+            <input type="text" id="search-paciente" placeholder="🔍 Buscar paciente pelo nome..." onkeyup="filtrarProntuarios()" style="flex: 1; margin: 0; font-size: 1.1em; border-radius: 8px;">
         </div>
         
         <div id="area-dos-prontuarios" style="display: flex; flex-direction: column; gap: 15px;"></div>
@@ -920,7 +893,7 @@
         document.getElementById('login-error').classList.remove('text-danger');
         document.getElementById('login-error').style.color = "#0056b3";
 
-        fetch(fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/auth/login', { {
+        fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, senha: pass })
@@ -1168,7 +1141,6 @@
         origemSoap = 'consulta'; 
         prontuarioAberto = null; 
 
-        // Função mágica que pega o valor ou retorna "null" se estiver vazio ou com o padrão "Selecione"
         let v = (id) => {
             let el = document.getElementById(id);
             if (!el) return null;
@@ -1195,11 +1167,9 @@
 
         let subj = idenStr.trim() + "\n\n";
 
-        // QUEIXA PRINCIPAL
         let qp = v('qp-tipo') === 'Outro' ? v('qp-texto') : 'Consulta de rotina';
         if(qp) subj += `QUEIXA PRINCIPAL: ${qp}.\n\n`;
 
-        // HMA NARRATIVA
         let hmaParts = [];
         if(v('hma-inicio')) hmaParts.push(`Início ${v('hma-inicio')}`);
         if(v('hma-local')) hmaParts.push(`localizado no(a) ${v('hma-local')}`);
@@ -1223,11 +1193,9 @@
             subj += `HMA: ${hmaConstruida}\n${hmaLivre || ""}\n\n`;
         }
 
-        // ANTECEDENTES FISIOLÓGICOS 
         let ap = v('resumo-gerado');
         if(ap) subj += `ANTECEDENTES PESSOAIS E FISIOLÓGICOS: ${ap}\n\n`;
 
-        // DNPM
         let dnpm = [];
         if(v('dnpm-anda') === 'Sim') dnpm.push(`Anda/Engatinha: Sim (${v('dnpm-anda-quando')||""})`);
         if(v('dnpm-fala') === 'Sim') dnpm.push(`Fala: Sim (${v('dnpm-fala-quando')||""})`);
@@ -1235,7 +1203,6 @@
         if(v('dnpm-fralda') && v('dnpm-fralda') !== 'Não') dnpm.push(`Desfralde: ${v('dnpm-fralda')} (${v('dnpm-fralda-quando')||""})`);
         if(dnpm.length > 0) subj += `DNPM: ${dnpm.join(' | ')}.\n\n`;
 
-        // PATOLÓGICO
         let pat = [];
         if(v('pat-trauma')) pat.push(`Traumas: ${v('pat-trauma')}`);
         if(v('pat-icte') === 'Sim') pat.push(`Icterícia prévia`);
@@ -1244,14 +1211,12 @@
         if(v('pat-base')) pat.push(`Doença de Base: ${v('pat-base')}`);
         if(pat.length > 0) subj += `HISTÓRICO PATOLÓGICO: ${pat.join(' | ')}.\n\n`;
 
-        // FAMILIAR
         let fam = [];
         if(v('fam-pai')) fam.push(`Pai: ${v('fam-pai')}`);
         if(v('fam-mae')) fam.push(`Mãe: ${v('fam-mae')}`);
         if(v('fam-irmaos')) fam.push(`Irmãos: ${v('fam-irmaos')}`);
         if(fam.length > 0) subj += `FAMILIAR: ${fam.join(' | ')}.\n\n`;
 
-        // SOCIOECONOMICO
         let soc = [];
         if(v('soc-casa')) soc.push(`Casa de ${v('soc-casa')}`);
         if(v('soc-sane') === 'Sim') soc.push(`Saneamento Básico`);
@@ -1262,7 +1227,6 @@
         if(v('hab-amb-tab-sel') === 'Sim') soc.push(`Tabagista: ${v('hab-amb-tab-txt')}`);
         if(soc.length > 0) subj += `SOCIOECONÔMICO E AMBIENTE: ${soc.join('. ')}.\n\n`;
 
-        // HABITOS
         let hab = "HÁBITOS:\n";
         let hasHab = false;
         if(v('hab-alim-rotina')) { hab += `- Alimentação: ${v('hab-alim-rotina')} (${v('hab-alim-vezes')||""}). Água: ${v('hab-alim-agua')||""}.\n`; hasHab=true; }
@@ -1305,9 +1269,9 @@
         if(v('ex-aspecto')) obj += `Aspecto complementar: ${v('ex-aspecto')}\n`;
         
         obj += "\nEXAME FÍSICO ESPECÍFICO:\n";
-        if(document.getElementById('chk-oro').checked && v('txt-oro')) obj += `Oroscopia: ${v('txt-oro')}\n`;
-        if(document.getElementById('chk-oto').checked && v('txt-oto')) obj += `Otoscopia: ${v('txt-oto')}\n`;
-        if(document.getElementById('chk-linfo').checked && v('txt-linfo')) obj += `Linfonodos: ${v('txt-linfo')}\n`;
+        if(document.getElementById('chk-oro').checked && v('txt-oro')) obj += `- Oroscopia: ${v('txt-oro')}\n`;
+        if(document.getElementById('chk-oto').checked && v('txt-oto')) obj += `- Otoscopia: ${v('txt-oto')}\n`;
+        if(document.getElementById('chk-linfo').checked && v('txt-linfo')) obj += `- Linfonodos: ${v('txt-linfo')}\n`;
         
         if(document.getElementById('chk-ar').checked) {
             let arParts = [];
@@ -1315,14 +1279,14 @@
             if(v('ar-palp')) arParts.push(`Palpação: ${v('ar-palp')}`);
             if(v('ar-perc')) arParts.push(`Percussão: ${v('ar-perc')}`);
             if(v('ar-ausc')) arParts.push(`Ausculta: ${v('ar-ausc')}`);
-            if(arParts.length > 0) obj += `Aparelho Respiratório:\n  ${arParts.join('\n  ')}\n`;
+            if(arParts.length > 0) obj += `- Aparelho Respiratório:\n  ${arParts.join('\n  ')}\n`;
         }
 
         if(document.getElementById('chk-acv').checked) {
             let acvParts = [];
             if(v('acv-ausc')) acvParts.push(`Ausculta: ${v('acv-ausc')}`);
             if(v('acv-ictus')) acvParts.push(`ICTUS: ${v('acv-ictus')}`);
-            if(acvParts.length > 0) obj += `Aparelho Cardiovascular:\n  ${acvParts.join('\n  ')}\n`;
+            if(acvParts.length > 0) obj += `- Aparelho Cardiovascular:\n  ${acvParts.join('\n  ')}\n`;
         }
 
         if(document.getElementById('chk-abd').checked) {
@@ -1333,11 +1297,11 @@
             if(v('abd-palpprof')) abdParts.push(`Palpação Profunda: ${v('abd-palpprof')}`);
             if(v('abd-perc')) abdParts.push(`Percussão: ${v('abd-perc')}`);
             if(v('abd-manobras')) abdParts.push(`Manobras: ${v('abd-manobras')}`);
-            if(abdParts.length > 0) obj += `Abdômen:\n  ${abdParts.join('\n  ')}\n`;
+            if(abdParts.length > 0) obj += `- Abdômen:\n  ${abdParts.join('\n  ')}\n`;
         }
 
-        if(document.getElementById('chk-reflexos').checked && v('txt-reflexos')) obj += `Reflexos: ${v('txt-reflexos')}\n`;
-        if(document.getElementById('chk-genital').checked && v('txt-genital')) obj += `Genitália: ${v('txt-genital')}\n`;
+        if(document.getElementById('chk-reflexos').checked && v('txt-reflexos')) obj += `- Reflexos: ${v('txt-reflexos')}\n`;
+        if(document.getElementById('chk-genital').checked && v('txt-genital')) obj += `- Genitália: ${v('txt-genital')}\n`;
 
         // ================= AVALIAÇÃO =================
         let ava = "";
@@ -1352,9 +1316,8 @@
 
         // ================= PLANO =================
         let plano = v('plano-texto') || "";
-        if(v('av-cid')) plano += `\n\nCID-10 Principal: ${v('av-cid')}`; // O CID sai no final do plano
+        if(v('av-cid')) plano += `\n\nCID-10 Principal: ${v('av-cid')}`; 
 
-        // Atribui os valores limpos e sem N/Is
         document.getElementById('soap-s').value = subj.trim();
         document.getElementById('soap-o').value = obj.trim();
         document.getElementById('soap-a').value = ava.trim();
@@ -1498,7 +1461,7 @@
             btn.style.backgroundColor = "#218838"; 
         })
         .catch(erro => {
-            showToast("❌ Erro de conexão com o banco de dados.", "danger");
+            showToast("Erro de conexão com o banco de dados.", "danger");
             btn.innerText = textoOriginal;
         });
     }
@@ -1565,7 +1528,7 @@
 
     function excluirProntuario(id) {
         if(confirm("Tem certeza que deseja EXCLUIR DEFINITIVAMENTE este prontuário? Esta ação não poderá ser desfeita.")) {
-            fetch('http://localhost:8080/api/prontuarios/deletar/' + id, {
+            fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/prontuarios/deletar/' + id, {
                 method: 'DELETE'
             })
             .then(resposta => {
@@ -1573,7 +1536,7 @@
                     showToast("Prontuário excluído com sucesso da nuvem.", "success");
                     buscarMeusProntuarios(); 
                 } else {
-                    showToast("❌ Ocorreu um erro ao tentar excluir o prontuário.", "danger");
+                    showToast("Ocorreu um erro ao tentar excluir o prontuário.", "danger");
                 }
             })
             .catch(erro => showToast("Erro de conexão com o servidor.", "danger"));
