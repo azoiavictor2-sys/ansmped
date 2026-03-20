@@ -920,7 +920,7 @@
         document.getElementById('login-error').classList.remove('text-danger');
         document.getElementById('login-error').style.color = "#0056b3";
 
-        fetch('http://localhost:8080/api/auth/login', {
+        fetch(fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/auth/login', { {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, senha: pass })
@@ -1486,7 +1486,7 @@
         const textoOriginal = btn.innerText;
         btn.innerText = "SALVANDO...";
 
-        fetch('http://localhost:8080/api/prontuarios/salvar', {
+        fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/prontuarios/salvar', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dadosProntuario)
@@ -1511,7 +1511,7 @@
             return;
         }
 
-        fetch('http://localhost:8080/api/prontuarios/listar/' + nomeAluno)
+        fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/prontuarios/listar/' + nomeAluno)
         .then(resposta => resposta.json())
         .then(lista => {
             window.prontuariosSalvos = lista; 
