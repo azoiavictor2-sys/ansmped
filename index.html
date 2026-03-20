@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prontuário Pediátrico - Ambulatório</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <style>
         :root { 
             --primary: #0056b3; 
@@ -15,6 +20,7 @@
             --shadow: 0 4px 12px rgba(0,0,0,0.08);
             --box-bg: #f8f9fa;
             --input-bg: #ffffff;
+            --toast-bg: #ffffff;
         }
         
         [data-theme="dark"] {
@@ -27,24 +33,22 @@
             --shadow: 0 4px 12px rgba(0,0,0,0.5);
             --box-bg: #2d2d2d;
             --input-bg: #252525;
+            --toast-bg: #2d2d2d;
         }
 
         html { scroll-behavior: smooth; }
         
+        /* Atualização da Fonte */
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.5; margin: 0; 
+            font-family: 'Inter', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            padding: 20px; 
+            line-height: 1.5; 
+            margin: 0; 
             transition: background-color 0.3s, color 0.3s; 
-            overflow-x: hidden;
         }
-        ::-webkit-scrollbar { width: 6px; height: 0px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-        [data-theme="dark"] ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
-        [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-        * { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.15) transparent; }
-
+        
         .container-login { max-width: 500px; margin: 10vh auto; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color 0.3s; }
         .container-setup { max-width: 800px; margin: 5vh auto; background: var(--card-bg); padding: 40px; border-radius: 12px; box-shadow: var(--shadow); transition: background-color 0.3s; }
         .container-app { max-width: 1400px; margin: 0 auto; padding: 20px; }
@@ -55,38 +59,51 @@
         
         .app-layout { display: flex; gap: 25px; align-items: flex-start; margin-top: 20px; }
         
-        .sidebar { flex: 0 0 260px; position: sticky; top: 20px; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; transition: background-color 0.3s;}
+        .sidebar { flex: 0 0 280px; position: sticky; top: 20px; background: var(--card-bg); padding: 20px; border-radius: 12px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; max-height: 90vh; overflow-y: auto; transition: background-color 0.3s;}
         .sidebar h3 { font-size: 1.1em; margin-bottom: 15px; border-bottom: none; text-align: center; color: var(--text);}
-        .sidebar a { text-decoration: none; color: var(--text); opacity: 0.8; padding: 10px 15px; border-radius: 8px; transition: all 0.2s; font-weight: 500; font-size: 0.95em; border: 1px solid transparent; }
+        .sidebar a { text-decoration: none; color: var(--text); opacity: 0.8; padding: 10px 15px; border-radius: 8px; transition: all 0.2s; font-weight: 500; font-size: 0.95em; border: 1px solid transparent; display: flex; align-items: center; gap: 10px; }
         .sidebar a:hover { background: var(--box-bg); opacity: 1; color: var(--primary); }
+        .sidebar a i { font-size: 1.2em; }
         
-        .sidebar a.btn-meus-prontuarios { background: var(--primary); color: white; text-align: center; margin-bottom: 15px; border-radius: 8px; font-weight: bold; opacity: 1;}
+        .sidebar a.btn-meus-prontuarios { background: var(--primary); color: white; justify-content: center; margin-bottom: 15px; border-radius: 8px; font-weight: bold; opacity: 1;}
         .sidebar a.btn-meus-prontuarios:hover { background: var(--primary-hover); }
-        .sidebar a.btn-finalizar { background: #28a745; color: white; text-align: center; margin-top: 15px; border-radius: 8px; font-weight: bold; opacity: 1;}
+        .sidebar a.btn-finalizar { background: #28a745; color: white; justify-content: center; margin-top: 15px; border-radius: 8px; font-weight: bold; opacity: 1;}
         .sidebar a.btn-finalizar:hover { background: #218838; }
 
         .main-content { flex: 1; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
         .card { background: var(--card-bg); padding: 30px; border-radius: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); scroll-margin-top: 20px; transition: background-color 0.3s;}
         
-        .dash-card { background: var(--box-bg); padding: 40px 30px; border-radius: 12px; border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; text-align: center;}
-        .dash-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary);}
-        .dash-card.green:hover { border-color: #28a745; }
-
         .form-group { margin-bottom: 15px; }
         label { font-weight: 600; display: block; margin-bottom: 6px; font-size: 0.9em; color: var(--text); opacity: 0.9;}
-        input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-family: inherit; background-color: var(--input-bg); color: var(--text); transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s; }
+        
+        /* Inputs Estilizados */
+        input[type="text"], input[type="password"], input[type="number"], input[type="date"], select, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1.5px solid var(--border); 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-family: inherit; 
+            background-color: var(--input-bg); 
+            color: var(--text); 
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s; 
+        }
         input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2); }
         
-        .btn { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 10px; width: 100%; font-weight: bold; transition: background 0.2s; }
-        .btn:hover { background-color: var(--primary-hover); }
+        /* Custom Checkboxes e Radios */
+        input[type="radio"], input[type="checkbox"] { accent-color: var(--primary); width: 18px; height: 18px; cursor: pointer; }
+
+        /* Botões Estilizados */
+        .btn { background-color: var(--primary); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; margin-top: 10px; width: 100%; font-weight: bold; transition: all 0.2s ease; }
+        .btn:hover { background-color: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); }
         .btn-secondary { background-color: #6c757d; }
-        .btn-secondary:hover { background-color: #5a6268; }
+        .btn-secondary:hover { background-color: #5a6268; box-shadow: 0 4px 10px rgba(108, 117, 125, 0.2); }
         .btn-copy { background-color: #28a745; margin-top: 10px; width: auto; font-size: 14px; padding: 8px 16px;}
-        .btn-copy:hover { background-color: #218838; }
+        .btn-copy:hover { background-color: #218838; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); }
         .btn-print { background-color: #17a2b8; margin-top: 10px; font-size: 16px; padding: 12px 24px; width: auto;}
-        .btn-print:hover { background-color: #138496; }
+        .btn-print:hover { background-color: #138496; box-shadow: 0 4px 10px rgba(23, 162, 184, 0.2); }
         .btn-word { background-color: #0056b3; margin-top: 10px; font-size: 16px; padding: 12px 24px; width: auto;}
-        .btn-word:hover { background-color: #004494; }
+        .btn-word:hover { background-color: #004494; box-shadow: 0 4px 10px rgba(0, 86, 179, 0.2); }
         
         .page { display: none; }
         .active-page { display: block; }
@@ -103,7 +120,20 @@
         .input-danger { border-color: #dc3545 !important; background-color: rgba(220,53,69,0.1) !important; }
         .input-warning { border-color: #ffc107 !important; background-color: rgba(255,193,7,0.1) !important; }
         
-        .summary-box { background: var(--box-bg); padding: 20px; border-radius: 8px; margin-bottom: 25px; color: var(--text); border-left: 5px solid var(--primary); transition: background-color 0.3s;}
+        /* Sticky Summary Box */
+        .summary-box { 
+            background: var(--card-bg); 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            color: var(--text); 
+            border-left: 5px solid var(--primary); 
+            transition: background-color 0.3s;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
         .summary-box p { margin: 5px 0; }
         .box-exame { background: var(--box-bg); padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid var(--border); transition: background-color 0.3s;}
         .box-exame h4 { margin-top: 0; color: var(--primary); border-bottom: none; font-size: 1.05em; margin-bottom: 10px;}
@@ -114,6 +144,13 @@
         .modal-content { background-color: var(--card-bg); margin: 5% auto; padding: 35px; border-radius: 12px; width: 90%; max-width: 600px; box-shadow: var(--shadow); position: relative; text-align: center;}
         .close-modal { color: #aaa; position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; }
         .close-modal:hover { color: var(--primary); }
+
+        /* Toast Notifications */
+        .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 15px 25px; background: var(--toast-bg); color: var(--text); border-left: 5px solid var(--primary); border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); transition: opacity 0.3s, transform 0.3s; opacity: 1; display: flex; align-items: center; gap: 10px; font-weight: 500; font-family: 'Inter', sans-serif;}
+        .toast.success { border-left-color: #28a745; }
+        .toast.error { border-left-color: #dc3545; }
+        .toast.fade-out { opacity: 0; transform: translateY(10px); }
 
         #print-area { display: none; }
         
@@ -133,70 +170,35 @@
             .print-footer .signature-line { width: 300px; border-top: 1px solid #000; margin: 0 auto 10px auto; }
             @page { margin: 2cm; }
         }
-
-        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { min-width: 250px; padding: 15px 20px; border-radius: 8px; color: white; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); opacity: 0; transform: translateX(100%); transition: all 0.3s ease-in-out; }
-        .toast.show { opacity: 1; transform: translateX(0); }
-        .toast-success { background-color: #28a745; }
-        .toast-danger { background-color: #dc3545; }
-        .toast-warning { background-color: #ffc107; color: #333; }
     </style>
 </head>
 <body>
 
-<div id="toast-container"></div> 
-
 <div id="page-login" class="page active-page">
     <div style="text-align: right; padding: 20px;">
-        <button class="btn btn-secondary" style="width: auto; padding: 8px 15px; border-radius: 20px;" onclick="toggleDarkMode()">Alternar Tema Escuro</button>
+        <button class="btn btn-secondary" id="btn-toggle-dark-header" style="width: auto; padding: 8px 15px; border-radius: 20px;">Alternar Tema Escuro</button>
     </div>
     <div class="container-login">
         <div style="text-align: center; margin-bottom: 20px;">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+            <i class="ph ph-stethoscope" style="font-size: 60px; color: var(--primary);"></i>
             <h2 style="margin-top: 10px;">Sistema Ambulatorial</h2>
         </div>
-        <div class="form-group"><label>Usuário:</label><input type="text" id="login-user" placeholder="Digite seu usuário" onkeypress="if(event.key === 'Enter') fazerLogin()"></div>
-        <div class="form-group"><label>Senha:</label><input type="password" id="login-pass" placeholder="Digite sua senha" onkeypress="if(event.key === 'Enter') fazerLogin()"></div>
-        <button class="btn" onclick="fazerLogin()">ACESSAR SISTEMA</button>
+        <div class="form-group"><label>Usuário:</label><input type="text" id="login-user" placeholder="Digite seu usuário"></div>
+        <div class="form-group"><label>Senha:</label><input type="password" id="login-pass" placeholder="Digite sua senha"></div>
+        <button class="btn" id="btn-login">ACESSAR PRONTUÁRIO</button>
         <div id="login-error" class="alert-text text-danger" style="text-align: center; margin-top: 15px;"></div>
-    </div>
-</div>
-
-<div id="page-dashboard" class="page">
-    <div class="container-app" style="max-width: 900px; margin-top: 5vh;">
-        <div class="card" style="padding: 50px 40px; text-align: center;">
-            <h1 style="color: var(--primary); margin-bottom: 10px;">Olá, <span id="dash-user-name">Aluno</span>!</h1>
-            <p style="color: var(--text); opacity: 0.8; font-size: 1.1em; margin-bottom: 40px;">Bem-vindo(a) ao seu painel de controle do Ambulatório FEMA.</p>
-
-            <div class="grid-2">
-                <div class="dash-card" onclick="irParaSetup()">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
-                    <h3 style="margin-bottom: 10px; border:none; color: var(--primary);">Novo Atendimento</h3>
-                    <p style="font-size: 0.9em; opacity: 0.7; margin: 0; color: var(--text);">Iniciar a configuração e anamnese de um novo paciente.</p>
-                </div>
-
-                <div class="dash-card green" onclick="buscarMeusProntuarios()">
-                    <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                    <h3 style="margin-bottom: 10px; border:none; color: #28a745;">Meus Prontuários</h3>
-                    <p style="font-size: 0.9em; opacity: 0.7; margin: 0; color: var(--text);">Acessar e editar histórico de pacientes salvos.</p>
-                </div>
-            </div>
-            
-            <button class="btn btn-secondary" onclick="sairDaConta()" style="width: auto; margin-top: 50px; padding: 10px 25px;">Sair da Conta</button>
-        </div>
     </div>
 </div>
 
 <div id="page-setup" class="page">
     <div class="container-setup">
-        <button class="btn btn-secondary" style="width: auto; margin-bottom: 20px; font-size: 0.9em;" onclick="voltarAoDashboard()">← Voltar ao Painel</button>
         <h2 style="text-align: center; margin-bottom: 30px;">Configuração do Atendimento</h2>
         
         <div class="card" style="margin-bottom: 20px; box-shadow: none; border: 1px solid var(--border);">
             <h3>Equipe Médica / Turma</h3>
             <div class="form-group">
                 <label>Qtd de alunos:</label>
-                <select id="qtd-alunos" onchange="gerarCamposAlunos()"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select>
+                <select id="qtd-alunos"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option><option value="5">5</option></select>
             </div>
             <div id="campos-alunos" class="form-group"></div>
             <div class="grid-3">
@@ -215,52 +217,53 @@
         </div>
 
         <div id="setup-error" class="alert-text text-danger" style="margin: 15px 0; text-align: center; font-size: 1em;"></div>
-        <button class="btn" onclick="iniciarConsulta()" style="padding: 15px; font-size: 1.1em;">INICIAR CONSULTA</button>
+        <button class="btn" id="btn-iniciar-consulta" style="padding: 15px; font-size: 1.1em;">INICIAR CONSULTA</button>
     </div>
 </div>
 
 <div id="page-consulta" class="page">
     <div class="container-app">
-        <div class="summary-box">
-            <div class="grid-2">
-                <div>
-                    <p><strong>Paciente:</strong> <span id="auto-paciente"></span></p>
-                    <p><strong>Estudantes:</strong> <span id="auto-alunos"></span></p>
-                </div>
-                <div style="text-align: right;">
-                    <p><strong>Data:</strong> <span id="auto-data"></span></p>
-                    <p><strong>Módulo:</strong> <span id="auto-etapa"></span> | <span id="auto-turma"></span> | <span id="auto-materia"></span></p>
-                </div>
-            </div>
-        </div>
-
         <div class="app-layout">
             <aside class="sidebar">
-                <a href="javascript:void(0)" class="btn-meus-prontuarios" onclick="buscarMeusProntuarios()">VER MEUS PRONTUÁRIOS</a>
+                <a href="javascript:void(0)" class="btn-meus-prontuarios" id="btn-meus-prontuarios">VER MEUS PRONTUÁRIOS</a>
                 
                 <h3>Navegação Rápida</h3>
-                <a href="#sec-identificacao">Identificação</a>
-                <a href="#sec-qp">Queixa Principal</a>
-                <a href="#sec-hma">História Atual (HMA)</a>
-                <a href="#sec-antecedentes">Antecedentes / Fisiológicos</a>
-                <a href="#sec-dnpm">Desenv. Psicomotor (DNPM)</a>
-                <a href="#sec-patologico">Histórico Patológico</a>
-                <a href="#sec-familiar">Antecedentes Familiares</a>
-                <a href="#sec-socio">Socioeconômico</a>
-                <a href="#sec-habitos">Hábitos de Vida</a>
-                <a href="#sec-isda">ISDA</a>
-                <a href="#sec-exame">Exame Físico</a>
-                <a href="#sec-avaliacao">Avaliação</a>
-                <a href="#sec-plano">Plano (Conduta)</a>
+                <a href="#sec-identificacao"><i class="ph ph-identification-card"></i> Identificação</a>
+                <a href="#sec-qp"><i class="ph ph-warning-circle"></i> Queixa Principal</a>
+                <a href="#sec-hma"><i class="ph ph-clock-counter-clockwise"></i> História Atual (HMA)</a>
+                <a href="#sec-antecedentes"><i class="ph ph-baby"></i> Antecedentes Fisiológicos</a>
+                <a href="#sec-dnpm"><i class="ph ph-brain"></i> Desenv. Psicomotor</a>
+                <a href="#sec-patologico"><i class="ph ph-first-aid"></i> Histórico Patológico</a>
+                <a href="#sec-familiar"><i class="ph ph-users"></i> Antecedentes Familiares</a>
+                <a href="#sec-socio"><i class="ph ph-house"></i> Socioeconômico</a>
+                <a href="#sec-habitos"><i class="ph ph-fork-knife"></i> Hábitos de Vida</a>
+                <a href="#sec-isda"><i class="ph ph-list-magnifying-glass"></i> ISDA</a>
+                <a href="#sec-exame"><i class="ph ph-heartbeat"></i> Exame Físico</a>
+                <a href="#sec-avaliacao"><i class="ph ph-clipboard-text"></i> Avaliação</a>
+                <a href="#sec-plano"><i class="ph ph-prescription"></i> Plano (Conduta)</a>
                 
                 <hr style="border-color: var(--border); width: 100%;">
                 
-                <a href="javascript:void(0)" onclick="toggleDarkMode()">Alternar Tema</a>
-                <a href="javascript:void(0)" onclick="limparProntuario()" style="color: #dc3545; font-weight: bold;">Limpar Prontuário</a>
-                <a href="javascript:void(0)" class="btn-finalizar" onclick="gerarSOAP()">FINALIZAR E EXPORTAR</a>
+                <a href="javascript:void(0)" id="btn-toggle-dark-sidebar"><i class="ph ph-moon"></i> Alternar Tema</a>
+                <a href="javascript:void(0)" id="btn-limpar-prontuario" style="color: #dc3545; font-weight: bold;"><i class="ph ph-trash"></i> Limpar Prontuário</a>
+                <a href="javascript:void(0)" class="btn-finalizar" id="btn-finalizar"><i class="ph ph-check-circle"></i> FINALIZAR E EXPORTAR</a>
             </aside>
 
             <main class="main-content">
+                
+                <div class="summary-box">
+                    <div class="grid-2">
+                        <div>
+                            <p><strong>Paciente:</strong> <span id="auto-paciente"></span></p>
+                            <p><strong>Estudantes:</strong> <span id="auto-alunos"></span></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p><strong>Data:</strong> <span id="auto-data"></span></p>
+                            <p><strong>Módulo:</strong> <span id="auto-etapa"></span> | <span id="auto-turma"></span> | <span id="auto-materia"></span></p>
+                        </div>
+                    </div>
+                </div>
+
                 <section class="card" id="sec-identificacao">
                     <h3>Identificação</h3>
                     <div class="grid-2">
@@ -355,7 +358,7 @@
                     <hr>
                     <div class="form-group">
                         <label>Descrição Detalhada da HMA (Texto Livre):</label>
-                        <textarea id="hma-desc-livre" rows="5" placeholder="Use este espaço para descrever a evolução da doença atual contando a história do paciente de forma fluida..."></textarea>
+                        <textarea id="hma-desc-livre" rows="5" placeholder="Use este espaço para descrever livremente a evolução da doença atual, detalhes adicionais ou redigir o parágrafo completo da HMA..."></textarea>
                     </div>
                 </section>
 
@@ -385,7 +388,7 @@
                         <div class="form-group"><label>Teve Intercorrência na Gestação?</label><select id="neo-int-select" onchange="toggleBox(this.value, 'box-int-gest', 'Sim')"><option>Não</option><option>Sim</option></select><div id="box-int-gest" class="hidden-field"><input type="text" id="neo-int-txt" placeholder="Qual intercorrência?"></div></div>
                         <div class="form-group"><label>Realizou Pré-natal adequado?</label><select id="neo-prenatal"><option>Sim</option><option>Não</option></select></div>
                     </div>
-                    <button class="btn btn-secondary" onclick="gerarResumo()">Atualizar Resumo Fisiológico</button>
+                    <button class="btn btn-secondary" id="btn-gerar-resumo">Atualizar Resumo Fisiológico</button>
                     <textarea id="resumo-gerado" rows="3" style="width:100%; margin-top:15px; background: var(--box-bg); border:none;" readonly placeholder="Resumo gerado automaticamente aparecerá aqui..."></textarea>
                 </section>
 
@@ -397,7 +400,7 @@
                     <div class="grid-2">
                         <div class="form-group">
                             <label>Já anda ou engatinha adequadamente?</label>
-                            <select id="dnpm-anda" onchange="document.getElementById('box-dnpm-anda').style.display = (this.value === 'Sim') ? 'block' : 'none';">
+                            <select id="dnpm-anda" onchange="verificarDNPM(); document.getElementById('box-dnpm-anda').style.display = (this.value === 'Sim') ? 'block' : 'none';">
                                 <option>Sim</option><option>Não</option>
                             </select>
                             <div id="box-dnpm-anda" class="hidden-field" style="display:block; background:var(--input-bg);">
@@ -406,7 +409,7 @@
                         </div>
                         <div class="form-group">
                             <label>Fala adequadamente para a idade?</label>
-                            <select id="dnpm-fala" onchange="document.getElementById('box-dnpm-fala').style.display = (this.value === 'Sim') ? 'block' : 'none';">
+                            <select id="dnpm-fala" onchange="verificarDNPM(); document.getElementById('box-dnpm-fala').style.display = (this.value === 'Sim') ? 'block' : 'none';">
                                 <option>Sim</option><option>Não</option>
                             </select>
                             <div id="box-dnpm-fala" class="hidden-field" style="display:block; background:var(--input-bg);">
@@ -483,7 +486,7 @@
                     
                     <h4>Escolaridade, Lazer e Temperamento</h4>
                     <div class="grid-2">
-                        <div class="form-group"><label>Tipo de institution escolar:</label><input type="text" id="hab-esc-tipo" placeholder="Creche, Pública, Particular..."></div>
+                        <div class="form-group"><label>Tipo de instituição escolar:</label><input type="text" id="hab-esc-tipo" placeholder="Creche, Pública, Particular..."></div>
                         <div class="form-group"><label>Horários que frequenta:</label><input type="text" id="hab-esc-hora" placeholder="Integral, Manhã, Tarde..."></div>
                         <div class="form-group"><label>Rendimento/Desempenho Escolar:</label><input type="text" id="hab-esc-rend" placeholder="Bom, dificuldades específicas?"></div>
                         <div class="form-group"><label>Relacionamento escolar:</label><input type="text" id="hab-esc-rel" placeholder="Como interage com colegas e professores?"></div>
@@ -595,7 +598,7 @@
                                 <label>Análise das Curvas (Peso/Estatura/IMC da OMS):</label>
                                 <input type="text" id="ex-curvas" placeholder="Ex: Escore Z entre -1 e +1 (Adequado)">
                             </div>
-                            <button class="btn btn-secondary" style="width: auto; margin-top: 0;" onclick="abrirModalCurvas()">Abrir Curvas da SBP</button>
+                            <button class="btn btn-secondary" id="btn-abrir-curvas" style="width: auto; margin-top: 0;">Abrir Curvas da SBP</button>
                         </div>
                     </div>
 
@@ -677,9 +680,7 @@
                         <div class="form-group"><label>Integração do DNPM:</label><input type="text" id="av-dnpm" placeholder="Apropriado para a idade cronológica..."></div>
                         <div class="form-group"><label>Ambiente Social e Emocional:</label><input type="text" id="av-soc" placeholder="Ambiente familiar favorável..."></div>
                         <div class="form-group"><label>Situação Vacinal:</label><input type="text" id="av-vac" placeholder="Atualizada / Necessita reforços"></div>
-                        <div class="form-group"><label>Diagnósticos Patológicos (Hipotéticos ou Confirmados):</label><input type="text" id="av-pat" placeholder="Ex: IVAS, Asma controlada, Nenhum achado agudo"></div>
-                        
-                        <div class="form-group"><label style="color:var(--primary);">CID-10 Principal:</label><input type="text" id="av-cid" placeholder="Ex: K59.0 - Constipação" style="border-color: var(--primary);"></div>
+                        <div class="form-group" style="grid-column: span 2;"><label>Diagnósticos Patológicos (Hipotéticos ou Confirmados):</label><input type="text" id="av-pat" placeholder="Ex: IVAS, Asma controlada, Nenhum achado agudo"></div>
                     </div>
                 </section>
 
@@ -703,9 +704,9 @@
             <p style="color:var(--text); opacity:0.8; text-align: center; margin-bottom: 30px; font-size: 1.1em;">Revise as informações abaixo. Você pode editar o texto livremente antes de exportar ou imprimir.</p>
             
             <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px;">
-                <button class="btn btn-print" onclick="atualizarImpressao(); window.print()">IMPRIMIR / SALVAR PDF</button>
-                <button class="btn btn-nuvem" onclick="salvarNoBanco()" style="background-color: #28a745; width: auto; padding: 12px 24px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer;">SALVAR NA NUVEM</button>
-                <button class="btn btn-word" onclick="exportarWord()">BAIXAR COMO WORD</button>
+                <button class="btn btn-print" id="btn-imprimir">IMPRIMIR / SALVAR PDF</button>
+                <button class="btn btn-nuvem" id="btn-nuvem" style="background-color: #28a745; width: auto; padding: 12px 24px; font-weight: bold; color: white; border: none; border-radius: 6px; cursor: pointer;">SALVAR NA NUVEM</button>
+                <button class="btn btn-word" id="btn-word">BAIXAR COMO WORD</button>
             </div>
             
             <div class="soap-box">
@@ -732,7 +733,7 @@
                 <div style="text-align: right;"><button class="btn btn-copy" onclick="copiarTexto('soap-p', this)">COPIAR PLANO</button></div>
             </div>
 
-            <button class="btn btn-secondary" onclick="voltarConsulta()" style="padding: 15px; font-size: 1.1em;">VOLTAR</button>
+            <button class="btn btn-secondary" id="btn-voltar-consulta" style="padding: 15px; font-size: 1.1em;">VOLTAR</button>
         </div>
     </div>
 </div>
@@ -740,11 +741,7 @@
 <div id="page-lista" class="page">
     <div class="container-app">
         <h1 style="text-align: center;">Meus Pacientes Atendidos</h1>
-        
-        <div style="display: flex; gap: 15px; margin-bottom: 20px;">
-            <button class="btn btn-secondary" style="width: auto; margin-top: 0;" onclick="voltarAoDashboard()">← Voltar</button>
-            <input type="text" id="search-paciente" placeholder="🔍 Buscar paciente pelo nome..." onkeyup="filtrarProntuarios()" style="flex: 1; margin: 0; font-size: 1.1em; border-radius: 8px;">
-        </div>
+        <button class="btn btn-secondary" id="btn-voltar-setup" style="width: auto; margin-bottom: 20px;">Voltar para Configuração</button>
         
         <div id="area-dos-prontuarios" style="display: flex; flex-direction: column; gap: 15px;"></div>
     </div>
@@ -756,22 +753,27 @@
         <h2>Ambulatório de Pediatria - Prontuário Eletrônico</h2>
         <p>Data do Atendimento: <span id="print-data"></span></p>
     </div>
+    
     <div class="print-section">
         <h3>[S] Subjetivo (Anamnese)</h3>
         <p id="print-subj"></p>
     </div>
+    
     <div class="print-section">
         <h3>[O] Objetivo (Exame Físico)</h3>
         <p id="print-obj"></p>
     </div>
+    
     <div class="print-section">
         <h3>[A] Avaliação</h3>
         <p id="print-ava"></p>
     </div>
+
     <div class="print-section">
         <h3>[P] Plano (Conduta)</h3>
         <p id="print-plano"></p>
     </div>
+
     <div class="print-footer">
         <div class="signature-line"></div>
         <p>Assinatura / Carimbo do Preceptor</p>
@@ -780,46 +782,90 @@
 
 <div id="modal-oms" class="modal">
     <div class="modal-content" style="max-width: 600px; text-align: center;">
-        <span class="close-modal" onclick="fecharModalCurvas()">&times;</span>
+        <span class="close-modal" id="btn-fechar-modal">&times;</span>
         <h2 style="margin-bottom: 15px; color: var(--primary);">Curvas de Crescimento (SBP)</h2>
+        
         <p style="margin-bottom: 25px; color: var(--text); opacity: 0.9; font-size: 1.05em; line-height: 1.5;">
             Acesse o portal da <strong>Sociedade Brasileira de Pediatria (SBP)</strong> para consultar os gráficos oficiais de Peso, Estatura, IMC e Perímetro Cefálico (OMS e CDC) para meninos e meninas.
         </p>
+
         <a href="https://www.sbp.com.br/departamentos/endocrinologia/graficos-de-crescimento/" target="_blank" class="btn" style="text-decoration: none; padding: 15px 30px; font-size: 1.1em; display: inline-block; background-color: var(--primary); box-sizing: border-box; width: 100%;">
             Acessar Portal de Gráficos da SBP
         </a>
+        
+        <p style="font-size: 0.85em; margin-top: 25px; color: var(--text); opacity: 0.7;">
+            O link abrirá uma nova aba com o diretório oficial enviado pelo seu professor.
+        </p>
     </div>
 </div>
 
+<div id="toast-container" class="toast-container"></div>
+
 <script>
+    // --- CONSTANTE PARA A API ---
+    const API_BASE_URL = 'http://localhost:8080/api';
+    
+    // Variável para saber de onde viemos ao clicar em "Voltar" no SOAP
     let origemSoap = 'consulta'; 
-    let prontuarioAberto = null; 
 
-    window.onload = function() {
-        if(localStorage.getItem('theme') === 'dark') { document.documentElement.setAttribute('data-theme', 'dark'); }
-        const logado = localStorage.getItem('usuarioLogadoNome');
-        if(logado) {
-            document.getElementById('dash-user-name').innerText = logado.split(' ')[0];
-            document.getElementById('page-login').classList.remove('active-page');
-            document.getElementById('page-dashboard').classList.add('active-page');
-            restaurarDadosSalvos();
+    // --- INICIALIZAÇÃO E EVENT LISTENERS GERAIS ---
+    document.addEventListener('DOMContentLoaded', () => {
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
         }
-    };
+        restaurarDadosSalvos();
 
+        document.body.addEventListener('input', salvarDadosAutomaticamente);
+        document.body.addEventListener('change', salvarDadosAutomaticamente);
+
+        // Binding de Eventos Principais
+        document.getElementById('btn-toggle-dark-header').addEventListener('click', toggleDarkMode);
+        document.getElementById('btn-toggle-dark-sidebar').addEventListener('click', toggleDarkMode);
+        
+        document.getElementById('btn-login').addEventListener('click', fazerLogin);
+        document.getElementById('login-user').addEventListener('keypress', (e) => { if (e.key === 'Enter') fazerLogin(); });
+        document.getElementById('login-pass').addEventListener('keypress', (e) => { if (e.key === 'Enter') fazerLogin(); });
+        
+        document.getElementById('btn-iniciar-consulta').addEventListener('click', iniciarConsulta);
+        document.getElementById('btn-meus-prontuarios').addEventListener('click', buscarMeusProntuarios);
+        document.getElementById('btn-limpar-prontuario').addEventListener('click', limparProntuario);
+        document.getElementById('btn-finalizar').addEventListener('click', gerarSOAP);
+        document.getElementById('btn-gerar-resumo').addEventListener('click', gerarResumo);
+        document.getElementById('btn-abrir-curvas').addEventListener('click', abrirModalCurvas);
+        document.getElementById('btn-fechar-modal').addEventListener('click', fecharModalCurvas);
+        
+        document.getElementById('btn-imprimir').addEventListener('click', () => { atualizarImpressao(); window.print(); });
+        document.getElementById('btn-nuvem').addEventListener('click', salvarNoBanco);
+        document.getElementById('btn-word').addEventListener('click', exportarWord);
+        document.getElementById('btn-voltar-consulta').addEventListener('click', voltarConsulta);
+        document.getElementById('btn-voltar-setup').addEventListener('click', voltarAoSetup);
+        
+        // Listener para fechar modal clicando fora dele
+        window.addEventListener('click', (event) => {
+            let modal = document.getElementById('modal-oms');
+            if (event.target == modal) modal.style.display = "none";
+        });
+    });
+
+    // --- SISTEMA DE TOAST NOTIFICATIONS ---
     function showToast(message, type = 'success') {
         const container = document.getElementById('toast-container');
         const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerText = message;
+        toast.className = `toast ${type}`;
+        
+        // Adiciona um ícone dependendo do tipo
+        let icon = type === 'success' ? '<i class="ph ph-check-circle"></i>' : '<i class="ph ph-warning"></i>';
+        toast.innerHTML = `${icon} <span>${message}</span>`;
+        
         container.appendChild(toast);
-
-        setTimeout(() => toast.classList.add('show'), 10);
+        
         setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
+            toast.classList.add('fade-out');
+            setTimeout(() => toast.remove(), 300); // Aguarda a animação do CSS para remover do DOM
         }, 3000);
     }
 
+    // --- FUNÇÕES GERAIS ---
     function toggleDarkMode() {
         if(document.documentElement.getAttribute('data-theme') === 'dark') {
             document.documentElement.removeAttribute('data-theme');
@@ -829,9 +875,6 @@
             localStorage.setItem('theme', 'dark');
         }
     }
-
-    document.body.addEventListener('input', salvarDadosAutomaticamente);
-    document.body.addEventListener('change', salvarDadosAutomaticamente);
 
     function mascaraCelular(v) {
         v = v.replace(/\D/g, ""); 
@@ -849,8 +892,11 @@
         const dados = {};
         inputs.forEach(el => {
             if(el.id && el.type !== 'password' && el.id !== 'login-user') {
-                if(el.type === 'checkbox' || el.type === 'radio') { dados[el.id + '_' + el.value] = el.checked; } 
-                else { dados[el.id] = el.value; }
+                if(el.type === 'checkbox' || el.type === 'radio') {
+                    dados[el.id + '_' + el.value] = el.checked;
+                } else {
+                    dados[el.id] = el.value;
+                }
             }
         });
         localStorage.setItem('prontuarioData', JSON.stringify(dados));
@@ -860,7 +906,10 @@
         const dados = JSON.parse(localStorage.getItem('prontuarioData'));
         if(!dados) return;
 
-        if(dados['qtd-alunos']) { document.getElementById('qtd-alunos').value = dados['qtd-alunos']; gerarCamposAlunos(); }
+        if(dados['qtd-alunos']) {
+            document.getElementById('qtd-alunos').value = dados['qtd-alunos'];
+            gerarCamposAlunos();
+        }
 
         const inputs = document.querySelectorAll('input, select, textarea');
         inputs.forEach(el => {
@@ -870,7 +919,10 @@
                 } else {
                     if(dados[el.id] !== undefined) el.value = dados[el.id];
                 }
-                if(el.tagName === 'SELECT' || el.type === 'checkbox') el.dispatchEvent(new Event('change'));
+                
+                if(el.tagName === 'SELECT' || el.type === 'checkbox') {
+                    el.dispatchEvent(new Event('change'));
+                }
             }
         });
         
@@ -891,9 +943,9 @@
 
         document.getElementById('login-error').innerText = "Autenticando no servidor...";
         document.getElementById('login-error').classList.remove('text-danger');
-        document.getElementById('login-error').style.color = "#0056b3";
+        document.getElementById('login-error').style.color = "var(--primary)";
 
-        fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/auth/login', {
+        fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: user, senha: pass })
@@ -904,42 +956,19 @@
         })
         .then(dadosUsuario => {
             localStorage.setItem('usuarioLogadoNome', dadosUsuario.nomeCompleto);
-            document.getElementById('dash-user-name').innerText = dadosUsuario.nomeCompleto.split(' ')[0];
             
             document.getElementById('page-login').classList.remove('active-page');
-            document.getElementById('page-dashboard').classList.add('active-page');
+            document.getElementById('page-setup').classList.add('active-page');
             document.getElementById('login-error').innerText = "";
             
             gerarCamposAlunos();
             restaurarDadosSalvos();
-            showToast("Login realizado com sucesso!", "success");
         })
         .catch(erro => {
             document.getElementById('login-error').style.color = "";
             document.getElementById('login-error').classList.add('text-danger');
             document.getElementById('login-error').innerText = '[ALERTA] ' + erro.message;
         });
-    }
-
-    function sairDaConta() {
-        localStorage.removeItem('usuarioLogadoNome');
-        document.getElementById('login-user').value = '';
-        document.getElementById('login-pass').value = '';
-        
-        document.querySelector('.active-page').classList.remove('active-page');
-        document.getElementById('page-login').classList.add('active-page');
-        showToast("Você saiu da conta.", "warning");
-    }
-
-    function irParaSetup() {
-        prontuarioAberto = null; 
-        document.querySelector('.active-page').classList.remove('active-page');
-        document.getElementById('page-setup').classList.add('active-page');
-    }
-
-    function voltarAoDashboard() {
-        document.querySelector('.active-page').classList.remove('active-page');
-        document.getElementById('page-dashboard').classList.add('active-page');
     }
 
     function gerarCamposAlunos() {
@@ -978,9 +1007,10 @@
         let pacNome = document.getElementById('paciente-nome').value.trim();
 
         if(!aluno1 || !materia || !turma || !semestre || !pacNome) {
-            showToast("Preencha o nome do paciente e turma.", "danger");
+            document.getElementById('setup-error').innerText = "[ALERTA] Por favor, preencha o nome de pelo menos UM aluno, a matéria, a turma, o semestre e o nome do paciente para continuar.";
             return;
         }
+        document.getElementById('setup-error').innerText = "";
 
         let alunos = [];
         for (let i = 1; i <= document.getElementById('qtd-alunos').value; i++) {
@@ -1046,6 +1076,7 @@
         msgElement.innerText = msg;
         inputElement.classList.remove('input-danger', 'input-warning');
         msgElement.classList.remove('text-danger', 'text-warning');
+        
         if (msg !== "") {
             let tipo = isDanger ? 'danger' : 'warning';
             inputElement.classList.add('input-' + tipo);
@@ -1070,7 +1101,7 @@
 
         let msgF = "", isDF = false;
         if(fc) { 
-            if(fc > 160 && meses <= 12) { msgF = "[ALERTA] Taquicardia Neonatal!"; isDF = true; }
+            if(fc > 160 && meses <= 12) { msgF = "[ALERTA] Taquicardia Neonatal/Lactente!"; isDF = true; }
             else if(fc > 140 && meses > 12) { msgF = "[ALERTA] Taquicardia Pediátrica!"; isDF = true; }
         }
         aplicarFeedbackVisual(iptFc, msgFc, msgF, isDF);
@@ -1091,7 +1122,7 @@
         aplicarFeedbackVisual(iptTemp, msgTemp, msgT, isDT);
 
         let msgS = "", isDS = false;
-        if(sat) { if(sat < 92) { msgS = "[ALERTA] Hipoxemia!"; isDS = true; } }
+        if(sat) { if(sat < 92) { msgS = "[ALERTA] Hipoxemia / Baixa Saturação!"; isDS = true; } }
         aplicarFeedbackVisual(iptSat, msgSat, msgS, isDS);
 
         let msgTc = "", isDTc = false;
@@ -1101,7 +1132,7 @@
         let msgP = "", isDP = false;
         if(pas && anos >= 1 && anos <= 10) { 
             let pasMin = 70 + (2 * Math.floor(anos));
-            if(pas < pasMin) { msgP = `[ALERTA] Risco de Hipotensão! (Mín: ${pasMin})`; isDP = true; }
+            if(pas < pasMin) { msgP = `[ALERTA] Risco de Hipotensão! (Mín Esperado: ${pasMin})`; isDP = true; }
         }
         aplicarFeedbackVisual(iptPas, msgPas, msgP, isDP);
     }
@@ -1119,7 +1150,7 @@
         const teveInt = document.getElementById('neo-int-select').value;
         const descInt = teveInt === 'Sim' ? document.getElementById('neo-int-txt').value : 'não apresentou';
         
-        document.getElementById('resumo-gerado').value = `G${g}P${p}A${a}, parto ${parto.toLowerCase()}, intercorrência: ${descInt}, pré-natal // ${local}, IG ${ig} semanas, APGAR ${apgar}. // AP: Vacinação em dia. Alergias: ${aler}.`;
+        document.getElementById('resumo-gerado').value = `G${g}P${p}A${a}, parto ${parto.toLowerCase()}, intercorrência: ${descInt}, consultas pré-natais realizadas // ${local}, IG ${ig} semanas, APGAR ${apgar}. // AP: Vacinação em dia. Alergias: ${aler}.`;
     }
 
     function calcularIMC() {
@@ -1131,438 +1162,24 @@
     function abrirModalCurvas() { document.getElementById('modal-oms').style.display = 'block'; }
     function fecharModalCurvas() { document.getElementById('modal-oms').style.display = 'none'; }
     
-    window.onclick = function(event) {
-        let modal = document.getElementById('modal-oms');
-        if (event.target == modal) modal.style.display = "none";
+    function verificarDNPM() {
+        // Apenas aciona funções adicionais de display se necessário
     }
 
-    // --- O NOVO CÉREBRO DE GERAÇÃO DO S.O.A.P (FIM DOS N/I) ---
     function gerarSOAP() {
-        origemSoap = 'consulta'; 
-        prontuarioAberto = null; 
+        origemSoap = 'consulta';
 
-        let v = (id) => {
-            let el = document.getElementById(id);
-            if (!el) return null;
-            let val = el.value.trim();
-            if (val === "" || val === "Selecione" || val === "N/I") return null;
-            return val;
-        };
-
-        // ================= SUBJETIVO =================
+        let v = (id) => document.getElementById(id) ? document.getElementById(id).value || "N/I" : "N/I";
+        
         let tipoSangue = document.querySelector('input[name="sangue-tipo"]:checked') ? document.querySelector('input[name="sangue-tipo"]:checked').value : "";
         let fatorRh = document.querySelector('input[name="sangue-fator"]:checked') ? document.querySelector('input[name="sangue-fator"]:checked').value : "";
-        let tipagemCompleta = (tipoSangue || fatorRh) ? (tipoSangue + fatorRh) : null;
-        let acomp = v('id-mae-acomp') === 'Sim' ? 'Mãe Biológica' : (v('id-acomp-nome') ? `${v('id-acomp-nome')} (${v('id-acomp-parente')})` : null);
-        let conv = v('id-tem-conv') === 'Sim' ? v('id-convenio') : 'SUS';
-
-        let idenStr = `IDENTIFICAÇÃO: Paciente ${v('paciente-nome') || "Não informado"}, ${v('idade-display') || ""}. `;
-        if(v('id-mae')) idenStr += `Mãe: ${v('id-mae')} `;
-        if(v('id-celular')) idenStr += `(Contato: ${v('id-celular')}). `;
-        if(v('id-cor') || v('id-etnia')) idenStr += `Cor/Etnia: ${v('id-cor')||""}/${v('id-etnia')||""}. `;
-        if(v('id-religiao')) idenStr += `Religião: ${v('id-religiao')}. `;
-        if(tipagemCompleta) idenStr += `Tipagem Sanguínea: ${tipagemCompleta}. `;
-        if(acomp) idenStr += `Acompanhado por: ${acomp}. `;
-        if(conv) idenStr += `Convênio: ${conv}. `;
-
-        let subj = idenStr.trim() + "\n\n";
-
-        let qp = v('qp-tipo') === 'Outro' ? v('qp-texto') : 'Consulta de rotina';
-        if(qp) subj += `QUEIXA PRINCIPAL: ${qp}.\n\n`;
-
-        let hmaParts = [];
-        if(v('hma-inicio')) hmaParts.push(`Início ${v('hma-inicio')}`);
-        if(v('hma-local')) hmaParts.push(`localizado no(a) ${v('hma-local')}`);
-        if(v('hma-int')) hmaParts.push(`intensidade ${v('hma-int')}/10`);
-        if(v('hma-tipo')) hmaParts.push(`dor tipo ${v('hma-tipo')}`);
-        if(v('hma-freq')) hmaParts.push(`com frequência ${v('hma-freq')}`);
-        if(v('hma-momento')) hmaParts.push(`no momento atual: ${v('hma-momento')}`);
-        if(v('hma-irradia')) hmaParts.push(`irradia para ${v('hma-irradia')}`);
-        if(v('hma-melhora')) hmaParts.push(`melhora com ${v('hma-melhora')}`);
-        if(v('hma-piora')) hmaParts.push(`piora com ${v('hma-piora')}`);
-        if(v('hma-assoc')) hmaParts.push(`sintomas associados: ${v('hma-assoc')}`);
+        let tipagemCompleta = (tipoSangue || fatorRh) ? (tipoSangue + fatorRh) : "Não informada";
         
-        let hmaConstruida = hmaParts.length > 0 ? `Paciente apresenta quadro com ${hmaParts.join(', ')}. ` : "";
-        if(v('hma-med-qual')) hmaConstruida += `Fez uso prévio de ${v('hma-med-qual')} (${v('hma-med-qtd')||""}) por ${v('hma-med-tempo')||""}. `;
-        if(v('hma-alt-texto')) hmaConstruida += `Relata alterações: ${v('hma-alt-texto')}. `;
-        if(v('hma-cons-quando')) hmaConstruida += `Consultou previamente em ${v('hma-cons-quando')} no ${v('hma-cons-onde')||""} com diagnóstico de ${v('hma-cons-diag')||""}. `;
-        if(v('hma-doentes') === 'Sim') hmaConstruida += `Relata contato com pessoas doentes. `;
-
-        let hmaLivre = v('hma-desc-livre');
-        if(hmaConstruida || hmaLivre) {
-            subj += `HMA: ${hmaConstruida}\n${hmaLivre || ""}\n\n`;
-        }
-
-        let ap = v('resumo-gerado');
-        if(ap) subj += `ANTECEDENTES PESSOAIS E FISIOLÓGICOS: ${ap}\n\n`;
-
-        let dnpm = [];
-        if(v('dnpm-anda') === 'Sim') dnpm.push(`Anda/Engatinha: Sim (${v('dnpm-anda-quando')||""})`);
-        if(v('dnpm-fala') === 'Sim') dnpm.push(`Fala: Sim (${v('dnpm-fala-quando')||""})`);
-        if(v('dnpm-dente')) dnpm.push(`Dentição: ${v('dnpm-dente')}`);
-        if(v('dnpm-fralda') && v('dnpm-fralda') !== 'Não') dnpm.push(`Desfralde: ${v('dnpm-fralda')} (${v('dnpm-fralda-quando')||""})`);
-        if(dnpm.length > 0) subj += `DNPM: ${dnpm.join(' | ')}.\n\n`;
-
-        let pat = [];
-        if(v('pat-trauma')) pat.push(`Traumas: ${v('pat-trauma')}`);
-        if(v('pat-icte') === 'Sim') pat.push(`Icterícia prévia`);
-        if(v('pat-cirurgia')) pat.push(`Cirurgias: ${v('pat-cirurgia')}`);
-        if(v('pat-interna')) pat.push(`Internações: ${v('pat-interna')}`);
-        if(v('pat-base')) pat.push(`Doença de Base: ${v('pat-base')}`);
-        if(pat.length > 0) subj += `HISTÓRICO PATOLÓGICO: ${pat.join(' | ')}.\n\n`;
-
-        let fam = [];
-        if(v('fam-pai')) fam.push(`Pai: ${v('fam-pai')}`);
-        if(v('fam-mae')) fam.push(`Mãe: ${v('fam-mae')}`);
-        if(v('fam-irmaos')) fam.push(`Irmãos: ${v('fam-irmaos')}`);
-        if(fam.length > 0) subj += `FAMILIAR: ${fam.join(' | ')}.\n\n`;
-
-        let soc = [];
-        if(v('soc-casa')) soc.push(`Casa de ${v('soc-casa')}`);
-        if(v('soc-sane') === 'Sim') soc.push(`Saneamento Básico`);
-        if(v('soc-agua') === 'Sim') soc.push(`Água tratada`);
-        if(v('hab-amb-reside')) soc.push(`Residem: ${v('hab-amb-reside')}`);
-        if(v('hab-amb-end')) soc.push(`Endereço: ${v('hab-amb-end')} (${v('hab-amb-local')||""})`);
-        if(v('hab-amb-pet-sel') === 'Sim') soc.push(`Animais: ${v('hab-amb-pet-txt')}`);
-        if(v('hab-amb-tab-sel') === 'Sim') soc.push(`Tabagista: ${v('hab-amb-tab-txt')}`);
-        if(soc.length > 0) subj += `SOCIOECONÔMICO E AMBIENTE: ${soc.join('. ')}.\n\n`;
-
-        let hab = "HÁBITOS:\n";
-        let hasHab = false;
-        if(v('hab-alim-rotina')) { hab += `- Alimentação: ${v('hab-alim-rotina')} (${v('hab-alim-vezes')||""}). Água: ${v('hab-alim-agua')||""}.\n`; hasHab=true; }
-        if(v('hab-med-cont')) { hab += `- Medicações: ${v('hab-med-cont')}.\n`; hasHab=true; }
-        if(v('hab-sono-horas')) { hab += `- Sono: ${v('hab-sono-horas')} horas. ${v('hab-sono-agi-sel')==='Sim' ? 'Agitado/Acorda: '+v('hab-sono-motivo') : 'Tranquilo'}.\n`; hasHab=true; }
-        if(v('hab-telas-tempo')) { hab += `- Telas: ${v('hab-telas-tempo')} (${v('hab-telas-cont')||""}).\n`; hasHab=true; }
-        if(v('hab-evac-vezes')) { hab += `- Evacuação: ${v('hab-evac-vezes')}. Bristol: ${v('hab-evac-bristol')||""}. ${v('hab-evac-alt-sel')==='Sim' ? 'Alt: '+v('hab-evac-alt-txt') : ''}\n`; hasHab=true; }
-        if(v('hab-diu-vezes')) { hab += `- Diurese: ${v('hab-diu-vezes')}. Cor: ${v('hab-diu-cor')||""}. ${v('hab-diu-alt-sel')==='Sim' ? 'Alt: '+v('hab-diu-alt-txt') : ''}\n`; hasHab=true; }
+        let subj = `DADOS DO PACIENTE: Paciente ${v('paciente-nome')}, ${v('idade-display')}. Mãe: ${v('id-mae')} (Contato: ${v('id-celular')}). Cor/Etnia: ${v('id-cor')}/${v('id-etnia')}. Religião: ${v('id-religiao')}. Tipagem Sanguínea: ${tipagemCompleta}. Acompanhado por: ${v('id-mae-acomp') === 'Sim' ? 'Mãe Biológica' : v('id-acomp-nome') + ' (' + v('id-acomp-parente') + ')'}. Convênio: ${v('id-tem-conv') === 'Sim' ? v('id-convenio') : 'SUS'}.\n\n`;
         
-        if(hasHab) subj += hab + "\n";
-        if(v('isda-texto')) subj += `ISDA: ${v('isda-texto')}\n`;
-
-        // ================= OBJETIVO =================
-        let obj = "";
-        let sv = [];
-        if(v('sv-temp')) sv.push(`Temp: ${v('sv-temp')} °C`);
-        if(v('sv-fc')) sv.push(`FC: ${v('sv-fc')} bpm`);
-        if(v('sv-fr')) sv.push(`FR: ${v('sv-fr')} irpm`);
-        if(v('sv-pas')) sv.push(`PAS: ${v('sv-pas')} mmHg`);
-        if(v('sv-sat')) sv.push(`SatO2: ${v('sv-sat')}%`);
-        if(v('sv-tec')) sv.push(`TEC: ${v('sv-tec')}s`);
-        if(v('ex-peso')) sv.push(`Peso: ${v('ex-peso')} kg`);
-        if(v('ex-altura')) sv.push(`Altura: ${v('ex-altura')} cm`);
-        if(v('ex-imc')) sv.push(`IMC: ${v('ex-imc')}`);
-        if(v('ex-pc')) sv.push(`PC: ${v('ex-pc')}`);
+        subj += `QUEIXA PRINCIPAL: ${v('qp-tipo') === 'Outro' ? v('qp-texto') : 'Consulta de rotina'}.\n\n`;
         
-        if(sv.length > 0) obj += `SINAIS VITAIS E ANTROPOMETRIA:\n${sv.join(' | ')}\n`;
-        if(v('ex-curvas')) obj += `Curvas: ${v('ex-curvas')}\n`;
+        subj += `HMA: Início: ${v('hma-inicio')}. Local: ${v('hma-local')}. Intensidade: ${v('hma-int')}/10. Frequência: ${v('hma-freq')}. Tipo: ${v('hma-tipo')}. Momento atual: ${v('hma-momento')}. Sintomas associados: ${v('hma-assoc')}. Alterações sistêmicas: ${v('hma-alt-texto')}. Consultas prévias sobre o quadro: ${v('hma-cons-quando')}, Diagnóstico: ${v('hma-cons-diag')}. Contato com doentes: ${v('hma-doentes')}.\n`;
+        subj += `HMA (Descrição Livre): ${v('hma-desc-livre')}\n\n`;
         
-        let ecto = [];
-        if(v('ex-glasgow')) ecto.push(`Glasgow: ${v('ex-glasgow')}`);
-        if(v('ex-beg')) ecto.push(v('ex-beg'));
-        if(v('ex-facies')) ecto.push(`fácies ${v('ex-facies').toLowerCase()}`);
-        if(v('ex-mucosa')) ecto.push(`mucosas ${v('ex-mucosa').toLowerCase()}`);
-        if(v('ex-resp')) ecto.push(v('ex-resp').toLowerCase());
-        if(v('ex-ativ')) ecto.push(v('ex-ativ').toLowerCase());
-        if(v('ex-atit')) ecto.push(v('ex-atit').toLowerCase());
-        
-        if(ecto.length > 0) obj += `\nECTOSCOPIA E ESTADO GERAL:\n${ecto.join(', ')}.\n`;
-        if(v('ex-aspecto')) obj += `Aspecto complementar: ${v('ex-aspecto')}\n`;
-        
-        obj += "\nEXAME FÍSICO ESPECÍFICO:\n";
-        if(document.getElementById('chk-oro').checked && v('txt-oro')) obj += `- Oroscopia: ${v('txt-oro')}\n`;
-        if(document.getElementById('chk-oto').checked && v('txt-oto')) obj += `- Otoscopia: ${v('txt-oto')}\n`;
-        if(document.getElementById('chk-linfo').checked && v('txt-linfo')) obj += `- Linfonodos: ${v('txt-linfo')}\n`;
-        
-        if(document.getElementById('chk-ar').checked) {
-            let arParts = [];
-            if(v('ar-insp')) arParts.push(`Inspeção: ${v('ar-insp')}`);
-            if(v('ar-palp')) arParts.push(`Palpação: ${v('ar-palp')}`);
-            if(v('ar-perc')) arParts.push(`Percussão: ${v('ar-perc')}`);
-            if(v('ar-ausc')) arParts.push(`Ausculta: ${v('ar-ausc')}`);
-            if(arParts.length > 0) obj += `- Aparelho Respiratório:\n  ${arParts.join('\n  ')}\n`;
-        }
-
-        if(document.getElementById('chk-acv').checked) {
-            let acvParts = [];
-            if(v('acv-ausc')) acvParts.push(`Ausculta: ${v('acv-ausc')}`);
-            if(v('acv-ictus')) acvParts.push(`ICTUS: ${v('acv-ictus')}`);
-            if(acvParts.length > 0) obj += `- Aparelho Cardiovascular:\n  ${acvParts.join('\n  ')}\n`;
-        }
-
-        if(document.getElementById('chk-abd').checked) {
-            let abdParts = [];
-            if(v('abd-insp')) abdParts.push(`Inspeção: ${v('abd-insp')}`);
-            if(v('abd-ausc')) abdParts.push(`Ausculta: ${v('abd-ausc')}`);
-            if(v('abd-palpsup')) abdParts.push(`Palpação Superficial: ${v('abd-palpsup')}`);
-            if(v('abd-palpprof')) abdParts.push(`Palpação Profunda: ${v('abd-palpprof')}`);
-            if(v('abd-perc')) abdParts.push(`Percussão: ${v('abd-perc')}`);
-            if(v('abd-manobras')) abdParts.push(`Manobras: ${v('abd-manobras')}`);
-            if(abdParts.length > 0) obj += `- Abdômen:\n  ${abdParts.join('\n  ')}\n`;
-        }
-
-        if(document.getElementById('chk-reflexos').checked && v('txt-reflexos')) obj += `- Reflexos: ${v('txt-reflexos')}\n`;
-        if(document.getElementById('chk-genital').checked && v('txt-genital')) obj += `- Genitália: ${v('txt-genital')}\n`;
-
-        // ================= AVALIAÇÃO =================
-        let ava = "";
-        let addItem = (label, val) => val ? `- ${label}: ${val}\n` : "";
-        ava += addItem("Nutricional", v('av-nutri'));
-        ava += addItem("Crescimento", v('av-cresc'));
-        ava += addItem("Alimentação", v('av-alim'));
-        ava += addItem("DNPM", v('av-dnpm'));
-        ava += addItem("Social e Emocional", v('av-soc'));
-        ava += addItem("Vacinas", v('av-vac'));
-        ava += addItem("Patologias", v('av-pat'));
-
-        // ================= PLANO =================
-        let plano = v('plano-texto') || "";
-        if(v('av-cid')) plano += `\n\nCID-10 Principal: ${v('av-cid')}`; 
-
-        document.getElementById('soap-s').value = subj.trim();
-        document.getElementById('soap-o').value = obj.trim();
-        document.getElementById('soap-a').value = ava.trim();
-        document.getElementById('soap-p').value = plano.trim();
-
-        const dataAtendimento = new Date().toLocaleDateString('pt-BR');
-        document.getElementById('print-data').innerText = dataAtendimento;
-
-        document.querySelector('.active-page').classList.remove('active-page');
-        document.getElementById('page-soap').classList.add('active-page');
-        window.scrollTo(0,0);
-    }
-
-    function atualizarImpressao() {
-        document.getElementById('print-subj').innerText = document.getElementById('soap-s').value;
-        document.getElementById('print-obj').innerText = document.getElementById('soap-o').value;
-        document.getElementById('print-ava').innerText = document.getElementById('soap-a').value;
-        document.getElementById('print-plano').innerText = document.getElementById('soap-p').value;
-    }
-
-    function voltarConsulta() {
-        document.getElementById('page-soap').classList.remove('active-page');
-        if(origemSoap === 'lista') {
-            document.getElementById('page-lista').classList.add('active-page');
-        } else {
-            document.getElementById('page-consulta').classList.add('active-page');
-        }
-    }
-
-    function copiarTexto(idElemento, btn) {
-        let texto = document.getElementById(idElemento);
-        texto.select();
-        texto.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(texto.value);
-        
-        let textoAntigo = btn.innerText;
-        btn.innerText = "COPIADO COM SUCESSO!";
-        btn.style.backgroundColor = "#218838";
-        setTimeout(() => {
-            btn.innerText = textoAntigo;
-            btn.style.backgroundColor = "#28a745";
-        }, 2000);
-    }
-
-    function exportarWord() {
-        atualizarImpressao();
-        
-        const dataAtendimento = document.getElementById('print-data').innerText;
-        const subj = document.getElementById('soap-s').value;
-        const obj = document.getElementById('soap-o').value;
-        const ava = document.getElementById('soap-a').value;
-        const plano = document.getElementById('soap-p').value;
-
-        const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-            "xmlns='http://www.w3.org/TR/REC-html40'>" +
-            "<head><meta charset='utf-8'><title>Prontuário</title></head><body>";
-        
-        const footer = "</body></html>";
-        const formatText = (text) => text.replace(/\n/g, '<br>');
-
-        const content = `
-            <div style="text-align: center; font-family: Arial, sans-serif;">
-                <h1 style="font-size: 16pt;">Fundação Educacional do Município de Assis (FEMA)</h1>
-                <h2 style="font-size: 13pt;">Ambulatório de Pediatria - Prontuário Eletrônico</h2>
-                <p style="font-size: 11pt; color: #555;">Data do Atendimento: ${dataAtendimento}</p>
-            </div>
-            <hr>
-            <div style="font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5;">
-                <h3 style="color: #004085; font-size: 13pt; margin-bottom: 5px;">[S] Subjetivo (Anamnese)</h3>
-                <p>${formatText(subj)}</p>
-                <br>
-                <h3 style="color: #004085; font-size: 13pt; margin-bottom: 5px;">[O] Objetivo (Exame Físico)</h3>
-                <p>${formatText(obj)}</p>
-                <br>
-                <h3 style="color: #004085; font-size: 13pt; margin-bottom: 5px;">[A] Avaliação</h3>
-                <p>${formatText(ava)}</p>
-                <br>
-                <h3 style="color: #004085; font-size: 13pt; margin-bottom: 5px;">[P] Plano (Conduta)</h3>
-                <p>${formatText(plano)}</p>
-                
-                <br><br><br>
-                <div style="text-align: center;">
-                    <hr style="width: 300px; display: inline-block;">
-                    <p>Assinatura / Carimbo do Preceptor</p>
-                </div>
-            </div>
-        `;
-
-        const sourceHTML = header + content + footer;
-        const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
-        const link = document.createElement('a');
-        
-        let nomePaciente = document.getElementById('auto-paciente').innerText;
-        if (!nomePaciente || nomePaciente === "") nomePaciente = prontuarioAberto ? prontuarioAberto.pacienteNome : "Paciente";
-
-        const nomeArquivo = `Prontuario_${nomePaciente.replace(/\s+/g, '_')}.doc`;
-        
-        link.href = source;
-        link.download = nomeArquivo;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-
-    function salvarNoBanco() {
-        let dadosProntuario;
-
-        if (prontuarioAberto) {
-            dadosProntuario = prontuarioAberto;
-            dadosProntuario.subjetivo = document.getElementById('soap-s').value;
-            dadosProntuario.objetivo = document.getElementById('soap-o').value;
-            dadosProntuario.avaliacao = document.getElementById('soap-a').value;
-            dadosProntuario.plano = document.getElementById('soap-p').value;
-        } else {
-            dadosProntuario = {
-                pacienteNome: document.getElementById('paciente-nome').value || "Não informado",
-                celularContato: document.getElementById('id-celular').value || "Não informado",
-                subjetivo: document.getElementById('soap-s').value || "",
-                objetivo: document.getElementById('soap-o').value || "",
-                avaliacao: document.getElementById('soap-a').value || "",
-                plano: document.getElementById('soap-p').value || "",
-                nomeAluno: document.getElementById('aluno-1') ? document.getElementById('aluno-1').value : "Aluno não informado",
-                turma: document.getElementById('turma').value || "T16"
-            };
-        }
-
-        const btn = document.querySelector('.btn-nuvem');
-        const textoOriginal = btn.innerText;
-        btn.innerText = "SALVANDO...";
-
-        fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/prontuarios/salvar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dadosProntuario)
-        })
-        .then(resposta => resposta.text())
-        .then(mensagem => {
-            showToast("Prontuário salvo na nuvem com sucesso!", "success");
-            btn.innerText = "SALVO NA NUVEM!";
-            btn.style.backgroundColor = "#218838"; 
-        })
-        .catch(erro => {
-            showToast("Erro de conexão com o banco de dados.", "danger");
-            btn.innerText = textoOriginal;
-        });
-    }
-
-    function buscarMeusProntuarios() {
-        let nomeAluno = localStorage.getItem('usuarioLogadoNome');
-
-        if(!nomeAluno) {
-            showToast("Por favor, faça o login primeiro.", "warning");
-            return;
-        }
-
-        fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/prontuarios/listar/' + nomeAluno)
-        .then(resposta => resposta.json())
-        .then(lista => {
-            window.prontuariosSalvos = lista; 
-
-            let area = document.getElementById('area-dos-prontuarios');
-            area.innerHTML = ""; 
-            document.getElementById('search-paciente').value = ""; 
-            
-            if(lista.length === 0) {
-                area.innerHTML = "<p style='text-align:center;'>Nenhum prontuário encontrado para este aluno.</p>";
-            } else {
-                lista.forEach(pront => {
-                    let dataFormatada = new Date(pront.dataAtendimento).toLocaleDateString('pt-BR');
-                    let matchMae = pront.subjetivo ? pront.subjetivo.match(/Mãe:\s(.*?)\s\(/) : null;
-                    let nomeMae = matchMae ? matchMae[1] : "Não informada";
-
-                    area.innerHTML += `
-                        <div class="card card-paciente" data-nome="${pront.pacienteNome.toLowerCase()}" style="border-left: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; padding: 20px;">
-                            <div>
-                                <h3 style="margin-bottom: 5px; border: none; color: var(--primary);">${pront.pacienteNome}</h3>
-                                <p style="margin-top: 0; font-size: 0.9em; opacity: 0.8;"><strong>Data:</strong> ${dataFormatada} &nbsp;|&nbsp; <strong>Mãe:</strong> ${nomeMae}</p>
-                            </div>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="btn" style="background-color: #dc3545; width: auto; margin-top: 0; padding: 10px 20px;" onclick="excluirProntuario(${pront.id})">Excluir</button>
-                                <button class="btn" style="background-color: #28a745; width: auto; margin-top: 0; padding: 10px 20px;" onclick="abrirProntuarioSalvo(${pront.id})">Prontuário</button>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            document.querySelector('.active-page').classList.remove('active-page');
-            document.getElementById('page-lista').classList.add('active-page');
-        })
-        .catch(erro => showToast("Erro ao buscar no banco de dados.", "danger"));
-    }
-
-    function filtrarProntuarios() {
-        const textoBusca = document.getElementById('search-paciente').value.toLowerCase();
-        const cartoes = document.querySelectorAll('.card-paciente');
-        
-        cartoes.forEach(cartao => {
-            const nomePaciente = cartao.getAttribute('data-nome');
-            if(nomePaciente.includes(textoBusca)) {
-                cartao.style.display = "flex";
-            } else {
-                cartao.style.display = "none";
-            }
-        });
-    }
-
-    function excluirProntuario(id) {
-        if(confirm("Tem certeza que deseja EXCLUIR DEFINITIVAMENTE este prontuário? Esta ação não poderá ser desfeita.")) {
-            fetch('https://jalisa-unradiative-indiscerptibly.ngrok-free.dev/api/prontuarios/deletar/' + id, {
-                method: 'DELETE'
-            })
-            .then(resposta => {
-                if(resposta.ok) {
-                    showToast("Prontuário excluído com sucesso da nuvem.", "success");
-                    buscarMeusProntuarios(); 
-                } else {
-                    showToast("Ocorreu um erro ao tentar excluir o prontuário.", "danger");
-                }
-            })
-            .catch(erro => showToast("Erro de conexão com o servidor.", "danger"));
-        }
-    }
-
-    function abrirProntuarioSalvo(id) {
-        let pront = window.prontuariosSalvos.find(p => p.id === id);
-        
-        if(pront) {
-            prontuarioAberto = pront; 
-
-            document.getElementById('soap-s').value = pront.subjetivo || "";
-            document.getElementById('soap-o').value = pront.objetivo || "";
-            document.getElementById('soap-a').value = pront.avaliacao || "";
-            document.getElementById('soap-p').value = pront.plano || "";
-            
-            document.getElementById('print-data').innerText = new Date(pront.dataAtendimento).toLocaleDateString('pt-BR');
-            
-            origemSoap = 'lista'; 
-
-            document.querySelector('.active-page').classList.remove('active-page');
-            document.getElementById('page-soap').classList.add('active-page');
-            window.scrollTo(0,0);
-        }
-    }
-</script>
-</body>
-</html>
+        subj += `ANTECEDENTES PESSO
